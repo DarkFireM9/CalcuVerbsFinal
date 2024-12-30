@@ -1,5 +1,7 @@
 package com.example.calcuverbs.navigation
 
+import com.example.calcuverbs.irregulares.M1AIrregularesScreen
+
 
 object Routes {
     var MainRegulares = "RegularesHomeScreen"
@@ -10,5 +12,5 @@ object Routes {
     var AboutUsIrregulares = "IrregularesAboutUsScreen"
 
     var M1ARegulares = "M1ARegularesScreen"
-    var M1AIregulares = "M1AIrregularesScreen"
+    var M1AIrregulares = "M1AIrregularesScreen"
 }

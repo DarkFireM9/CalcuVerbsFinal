@@ -80,7 +80,7 @@ fun ModuleGrid(navController: NavController, context: android.content.Context) {
         // Fila superior
         Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
             ModuleButton("M1.A") {
-                Toast.makeText(context, "Navegando al Módulo 1A", Toast.LENGTH_SHORT).show()
+                navController.navigate(Routes.M1AIrregulares)
             }
             ModuleButton("M1.B") {
                 Toast.makeText(context, "Módulo 1B seleccionado", Toast.LENGTH_SHORT).show()

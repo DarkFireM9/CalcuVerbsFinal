@@ -9,6 +9,7 @@ import com.example.calcuverbs.data.AppDatabase
 import com.example.calcuverbs.irregulares.IrregularesAboutUsScreen
 import com.example.calcuverbs.irregulares.IrregularesMainScreen
 import com.example.calcuverbs.irregulares.IrregularesModulesScreen
+import com.example.calcuverbs.irregulares.M1AIrregularesScreen
 import com.example.calcuverbs.regulares.M1ARegularesScreen
 import com.example.calcuverbs.regulares.RegularesAboutUsScreen
 import com.example.calcuverbs.regulares.RegularesMainScreen
@@ -40,22 +41,17 @@ fun AppNavigation(database: AppDatabase) {
             IrregularesAboutUsScreen(navController)
         }
 
-        // Pantalla de verbos regulares
         composable(Routes.M1ARegulares) {
             val factory = M1AViewModelFactory(database)
             val viewModel: M1AViewModel = viewModel(factory = factory)
 
-            // Pasamos `isRegular = true` para esta pantalla
             M1ARegularesScreen(navController = navController, viewModel = viewModel, isRegular = true)
         }
 
-        // Pantalla de verbos irregulares
-        //composable(Routes.M1AIrregulares) {
-          //  val factory = M1AViewModelFactory(database)
-            //val viewModel: M1AViewModel = viewModel(factory = factory)
-
-            // Pasamos `isRegular = false` para esta pantalla
-            //M1ARegularesScreen(navController = navController, viewModel = viewModel, isRegular = false)
- //       }
+        composable(Routes.M1AIrregulares) {
+            val factory = M1AViewModelFactory(database)
+            val viewModel: M1AViewModel = viewModel(factory = factory)
+            M1AIrregularesScreen(navController = navController, viewModel = viewModel, isRegular = false)
+        }
     }
 }
