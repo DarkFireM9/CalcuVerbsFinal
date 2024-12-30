@@ -13,3 +13,16 @@ class M1AViewModelFactory(private val database: AppDatabase) : ViewModelProvider
         throw IllegalArgumentException("Unknown ViewModel class")
     }
 }
+
+class NoteViewModelFactory(
+    private val database: AppDatabase,
+    private val screenId: String
+) : ViewModelProvider.Factory {
+    override fun <T : ViewModel> create(modelClass: Class<T>): T {
+        if (modelClass.isAssignableFrom(NoteViewModel::class.java)) {
+            val noteDao = database.noteDao() // Obtén el NoteDao de AppDatabase
+            return NoteViewModel(noteDao, screenId) as T
+        }
+        throw IllegalArgumentException("Unknown ViewModel class")
+    }
+}

@@ -82,35 +82,28 @@ fun ModuleGrid(navController: NavController, context: android.content.Context) {
             ModuleButton("M1.A") {
                 navController.navigate(Routes.M1AIrregulares)
             }
-            ModuleButton("M1.B") {
-                Toast.makeText(context, "Módulo 1B seleccionado", Toast.LENGTH_SHORT).show()
+            ModuleButton("M1.B") {navController.navigate(Routes.IrregularSoon)
             }
         }
         // Segunda fila
         Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-            ModuleButton("M2.A") {
-                Toast.makeText(context, "Módulo 2A seleccionado", Toast.LENGTH_SHORT).show()
+            ModuleButton("M2.A") {navController.navigate(Routes.IrregularSoon)
             }
-            ModuleButton("M2.B") {
-                Toast.makeText(context, "Módulo 2B seleccionado", Toast.LENGTH_SHORT).show()
+            ModuleButton("M2.B") {navController.navigate(Routes.IrregularSoon)
             }
         }
         // Tercera fila
         Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-            ModuleButton("M3.A") {
-                Toast.makeText(context, "Módulo 3A seleccionado", Toast.LENGTH_SHORT).show()
+            ModuleButton("M3.A") {navController.navigate(Routes.IrregularSoon)
             }
-            ModuleButton("M3.B") {
-                Toast.makeText(context, "Módulo 3B seleccionado", Toast.LENGTH_SHORT).show()
+            ModuleButton("M3.B") {navController.navigate(Routes.IrregularSoon)
             }
         }
         // Fila inferior
         Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-            ModuleButton("M4.A") {
-                Toast.makeText(context, "Módulo 4A seleccionado", Toast.LENGTH_SHORT).show()
+            ModuleButton("M4.A") {navController.navigate(Routes.IrregularSoon)
             }
-            ModuleButton("M4.B") {
-                Toast.makeText(context, "Módulo 4B seleccionado", Toast.LENGTH_SHORT).show()
+            ModuleButton("M4.B") {navController.navigate(Routes.IrregularSoon)
             }
         }
     }

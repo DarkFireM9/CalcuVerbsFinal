@@ -5,6 +5,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
@@ -58,7 +60,9 @@ fun RegularesAboutUsScreen(navController: NavController) {
                     .fillMaxSize()
                     .background(RegularesPrimary) // Fondo de color
                     .padding(innerPadding)
-                    .padding(16.dp), // Padding adicional para margen
+                    .padding(16.dp)
+                    .verticalScroll(rememberScrollState()), // Padding adicional para margen
+
                 verticalArrangement = Arrangement.spacedBy(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally
             ) {

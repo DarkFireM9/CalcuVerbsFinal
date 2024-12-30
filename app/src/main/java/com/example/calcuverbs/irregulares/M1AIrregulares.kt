@@ -19,6 +19,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
@@ -45,6 +47,7 @@ import com.example.calcuverbs.ui.module1.M1AViewModel
 import com.example.calcuverbs.ui.theme.IrregularesPrimary
 import com.example.calcuverbs.ui.theme.IrregularesSecondary
 import com.example.calcuverbs.ui.theme.IrregularesTertiary
+import com.example.calcuverbs.ui.theme.RegularesTertiary
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
@@ -102,6 +105,18 @@ fun M1AIrregularesScreen(
                         )
                     }
                 },
+                actions = {
+                    Text(
+                        text = "Notas",
+                        fontSize = 14.sp, // Tamaño más pequeño que el título
+                        color = RegularesTertiary,
+                        modifier = Modifier
+                            .clickable {
+                                navController.navigate("NoteIrregular/1")
+                            }
+                            .padding(horizontal = 16.dp) // Margen opcional
+                    )
+                },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = IrregularesSecondary,
                     titleContentColor = IrregularesTertiary,
@@ -115,6 +130,7 @@ fun M1AIrregularesScreen(
                     .fillMaxSize()
                     .padding(innerPadding)
                     .background(IrregularesPrimary)
+                    .verticalScroll(rememberScrollState())
             ) {
                 // Selector de Pronombres
                 IrregularesHorizontalScrollSelector(

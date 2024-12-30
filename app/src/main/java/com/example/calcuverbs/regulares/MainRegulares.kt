@@ -3,7 +3,9 @@ package com.example.calcuverbs.regulares
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -39,7 +41,7 @@ fun RegularesMainScreen( navController: NavController)
             // Logo y título
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(top = 32.dp)
+                modifier = Modifier.padding(top = 32.dp) .verticalScroll(rememberScrollState())
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.appicon),
@@ -76,7 +78,7 @@ fun RegularesMainScreen( navController: NavController)
                     Text(text = "Módulos", color = RegularesPrimary)
                 }
                 Button(
-                    onClick = {  },
+                    onClick = { navController.navigate(Routes.RegularSoon) },
                     shape = RoundedCornerShape(16.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.onPrimary)
                 ) {
@@ -88,7 +90,7 @@ fun RegularesMainScreen( navController: NavController)
 
             // Botón Premium centrado
             Button(
-                onClick = {  },
+                onClick = { navController.navigate(Routes.RegularSoon) },
                 shape = RoundedCornerShape(16.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.onPrimary),
                 modifier = Modifier.padding(horizontal = 16.dp)

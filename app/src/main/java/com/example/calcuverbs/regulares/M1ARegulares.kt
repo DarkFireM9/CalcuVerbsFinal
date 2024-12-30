@@ -17,6 +17,8 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
@@ -100,6 +102,18 @@ fun M1ARegularesScreen(
                         )
                     }
                 },
+                actions = {
+                    Text(
+                        text = "Notas",
+                        fontSize = 14.sp, // Tamaño más pequeño que el título
+                        color = RegularesTertiary,
+                        modifier = Modifier
+                            .clickable {
+                                navController.navigate("NoteRegular/1")
+                            }
+                            .padding(horizontal = 16.dp) // Margen opcional
+                    )
+                },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
                     containerColor = RegularesSecondary,
                     titleContentColor = RegularesTertiary,
@@ -113,6 +127,7 @@ fun M1ARegularesScreen(
                     .fillMaxSize()
                     .padding(innerPadding)
                     .background(RegularesPrimary)
+                    .verticalScroll(rememberScrollState())
             ) {
                 // Selector de Pronombres
                 HorizontalScrollSelector(

@@ -4,7 +4,9 @@ package com.example.calcuverbs.irregulares
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -38,7 +40,7 @@ fun IrregularesMainScreen(navController: NavController) {
             // Logo y título
             Column(
                 horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier.padding(top = 32.dp)
+                modifier = Modifier.padding(top = 32.dp).verticalScroll(rememberScrollState())
             ) {
                 Image(
                     painter = painterResource(id = R.drawable.appicon),
@@ -74,7 +76,7 @@ fun IrregularesMainScreen(navController: NavController) {
                     Text(text = "Módulos", color = IrregularesPrimary)
                 }
                 Button(
-                    onClick = {  },
+                    onClick = { navController.navigate(Routes.IrregularSoon) },
                     shape = RoundedCornerShape(16.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = IrregularesTertiary)
                 ) {
@@ -86,7 +88,7 @@ fun IrregularesMainScreen(navController: NavController) {
 
             // Botón Premium centrado
             Button(
-                onClick = {  },
+                onClick = { navController.navigate(Routes.IrregularSoon)  },
                 shape = RoundedCornerShape(16.dp),
                 colors = ButtonDefaults.buttonColors(containerColor = IrregularesTertiary),
                 modifier = Modifier.padding(horizontal = 16.dp)

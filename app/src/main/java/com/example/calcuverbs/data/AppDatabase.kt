@@ -39,6 +39,27 @@ data class Modal(
     val modal: String
 )
 
+@Entity(tableName = "notes")
+data class Note(
+    @PrimaryKey(autoGenerate = true) val id: Int = 0,
+    val screenId: String, // Identifica la pantalla
+    val content: String
+)
+
+
+@Dao
+interface NoteDao {
+    @Query("SELECT * FROM notes WHERE screenId = :screenId LIMIT 1")
+    suspend fun getNoteForScreen(screenId: String): Note?
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertNote(note: Note)
+
+    @Query("DELETE FROM notes WHERE screenId = :screenId")
+    suspend fun clearNotesForScreen(screenId: String)
+}
+
+
 @Dao
 interface VerbDao {
     @Query("SELECT * FROM verbs")
@@ -79,12 +100,13 @@ interface RuleDao {
     suspend fun insertRules(rules: List<Rule>)
 }
 
-@Database(entities = [Pronoun::class, Verb::class, Rule::class, Modal::class], version = 1)
+@Database(entities = [Pronoun::class, Verb::class, Rule::class, Modal::class, Note::class], version = 2, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun verbDao(): VerbDao
     abstract fun modalDao(): ModalDao
     abstract fun pronounDao(): PronounDao
     abstract fun ruleDao(): RuleDao
+    abstract fun noteDao(): NoteDao
 
     companion object {
         @Volatile
@@ -97,6 +119,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "verbs_database"
                 )
+
                     .addCallback(DatabaseCallback())
                     .build().also { INSTANCE = it }
             }
