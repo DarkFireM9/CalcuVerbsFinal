@@ -36,12 +36,13 @@ class M1AViewModel(private val database: AppDatabase) : ViewModel() {
     }
 
     // Carga verbos según la regularidad (true = regulares, false = irregulares)
-    fun loadVerbs(isRegular: Boolean) {
+    fun loadVerbs(isRegular: Boolean, modulo: String) {
         viewModelScope.launch {
-            val filteredVerbs = database.verbDao().getVerbsByRegularity(isRegular)
+            val filteredVerbs = database.verbDao().getVerbsByRegularityAndModulo(isRegular, modulo)
             _verbs.postValue(filteredVerbs)
         }
     }
+
 
     fun getVerbsGroupedByLetter(isRegular: Boolean): LiveData<Map<Char, List<Verb>>> {
         val result = MutableLiveData<Map<Char, List<Verb>>>()

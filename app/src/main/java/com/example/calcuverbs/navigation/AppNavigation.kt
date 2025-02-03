@@ -53,14 +53,14 @@ fun AppNavigation(database: AppDatabase) {
             val factory = M1AViewModelFactory(database)
             val viewModel: M1AViewModel = viewModel(factory = factory)
 
-            M1ARegularesScreen(navController = navController, viewModel = viewModel, isRegular = true)
+            M1ARegularesScreen(navController = navController, viewModel = viewModel, isRegular = true, modulo = "1A")
         }
 
         composable(Routes.M1AIrregulares) {
             val factory = M1AViewModelFactory(database)
             val viewModel: M1AViewModel = viewModel(factory = factory)
 
-            M1AIrregularesScreen(navController = navController, viewModel = viewModel, isRegular = false)
+            M1AIrregularesScreen(navController = navController, viewModel = viewModel, isRegular = false, modulo = "1A")
         }
 
         composable(

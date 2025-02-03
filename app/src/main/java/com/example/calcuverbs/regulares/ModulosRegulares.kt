@@ -76,30 +76,30 @@ fun ModuleGrid(navController: NavController, context: android.content.Context) {
         // Fila superior
         Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
             ModuleButton("M1.A") {navController.navigate(Routes.M1ARegulares)}
-            ModuleButton("M1.B") {navController.navigate(Routes.RegularSoon)
-            }
-        }
-        // Segunda fila
-        Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
             ModuleButton("M2.A") {navController.navigate(Routes.RegularSoon)
             }
-            ModuleButton("M2.B") {navController.navigate(Routes.RegularSoon)
-            }
         }
-        // Tercera fila
-        Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-            ModuleButton("M3.A") {navController.navigate(Routes.RegularSoon)
-            }
-            ModuleButton("M3.B") {navController.navigate(Routes.RegularSoon)
-            }
-        }
-        // Fila inferior
-        Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
-            ModuleButton("M4.A") {navController.navigate(Routes.RegularSoon)
-            }
-            ModuleButton("M4.B") {navController.navigate(Routes.RegularSoon)
-            }
-        }
+//        // Segunda fila
+//        Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+//            ModuleButton("M2.A") {navController.navigate(Routes.RegularSoon)
+//            }
+//            ModuleButton("M2.B") {navController.navigate(Routes.RegularSoon)
+//            }
+//        }
+//        // Tercera fila
+//        Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+//            ModuleButton("M3.A") {navController.navigate(Routes.RegularSoon)
+//            }
+//            ModuleButton("M3.B") {navController.navigate(Routes.RegularSoon)
+//            }
+//        }
+//        // Fila inferior
+//        Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
+//            ModuleButton("M4.A") {navController.navigate(Routes.RegularSoon)
+//            }
+//            ModuleButton("M4.B") {navController.navigate(Routes.RegularSoon)
+//            }
+//        }
     }
 }
 

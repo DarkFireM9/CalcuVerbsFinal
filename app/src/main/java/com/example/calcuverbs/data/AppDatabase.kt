@@ -3,9 +3,8 @@ package com.example.calcuverbs.data
 import android.content.Context
 import androidx.room.*
 import androidx.sqlite.db.SupportSQLiteDatabase
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+
+
 
 @Entity
 data class Pronoun(
@@ -21,8 +20,31 @@ data class Verb(
     val baseForm: String,
     val pastSimple: String,
     val pastParticiple: String,
-    val isRegular: Boolean
+    val presentPerfect: String,
+    val pastPerfect: String,
+    val isRegular: Boolean,
+    val modulo: String // Nuevo campo para diferenciar módulos
 )
+
+
+
+@Entity(tableName = "tenses")
+data class Tense(
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
+    val name: String // Ejemplo: "Simple Present", "Simple Past", etc.
+)
+
+
+
+
+@Entity(tableName = "auxiliaries")
+data class Auxiliary(
+    @PrimaryKey(autoGenerate = true)
+    val id: Int = 0,
+    val auxiliary: String // Ejemplo: "do", "does", "did", "have", "has", "had"
+)
+
 
 @Entity
 data class Rule(
@@ -68,9 +90,21 @@ interface VerbDao {
     @Query("SELECT * FROM verbs WHERE isRegular = :isRegular")
     suspend fun getVerbsByRegularity(isRegular: Boolean): List<Verb>
 
+    @Query("SELECT * FROM verbs WHERE modulo = :modulo")
+    suspend fun getVerbsByModulo(modulo: String): List<Verb>
+
+    @Query("SELECT * FROM verbs WHERE isRegular = :isRegular AND modulo = :modulo")
+    suspend fun getVerbsByRegularityAndModulo(isRegular: Boolean, modulo: String): List<Verb>
+
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertVerbs(verbs: List<Verb>)
+
+
+
 }
+
+
 
 
 @Dao
@@ -100,13 +134,39 @@ interface RuleDao {
     suspend fun insertRules(rules: List<Rule>)
 }
 
-@Database(entities = [Pronoun::class, Verb::class, Rule::class, Modal::class, Note::class], version = 2, exportSchema = false)
+@Dao
+interface TenseDao {
+    @Query("SELECT * FROM tenses")
+    suspend fun getAllTenses(): List<Tense>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertTenses(tenses: List<Tense>)
+}
+
+@Dao
+interface AuxiliaryDao {
+    @Query("SELECT * FROM auxiliaries")
+    suspend fun getAllAuxiliaries(): List<Auxiliary>
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertAuxiliaries(auxiliaries: List<Auxiliary>)
+}
+
+
+
+
+@Database(entities = [Pronoun::class, Verb::class, Rule::class, Modal::class, Note::class, Tense::class, Auxiliary::class], version = 4, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun verbDao(): VerbDao
     abstract fun modalDao(): ModalDao
     abstract fun pronounDao(): PronounDao
     abstract fun ruleDao(): RuleDao
     abstract fun noteDao(): NoteDao
+    abstract fun tenseDao(): TenseDao
+    abstract fun auxiliaryDao(): AuxiliaryDao
+
+
+
 
     companion object {
         @Volatile
@@ -119,7 +179,7 @@ abstract class AppDatabase : RoomDatabase() {
                     AppDatabase::class.java,
                     "verbs_database"
                 )
-
+                    .fallbackToDestructiveMigration() // Para actualizar la BD sin perder datos en desarrollo
                     .addCallback(DatabaseCallback())
                     .build().also { INSTANCE = it }
             }
@@ -135,3 +195,4 @@ abstract class AppDatabase : RoomDatabase() {
         }
     }
 }
+

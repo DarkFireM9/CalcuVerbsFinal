@@ -54,7 +54,8 @@ import com.example.calcuverbs.ui.theme.RegularesTertiary
 fun M1AIrregularesScreen(
     navController: NavController,
     viewModel: M1AViewModel,
-    isRegular: Boolean // Parámetro para determinar si se cargan verbos regulares o irregulares
+    isRegular: Boolean, // Parámetro para determinar si se cargan verbos regulares o irregulares
+    modulo: String // Nuevo parámetro para filtrar por módulo
 ) {
     // Observa la lista de verbos desde el ViewModel
     val verbs by viewModel.verbs.observeAsState(emptyList())
@@ -82,8 +83,8 @@ fun M1AIrregularesScreen(
 
 
     // Cargar los verbos según la regularidad al iniciar la pantalla
-    LaunchedEffect(isRegular) {
-        viewModel.loadVerbs(isRegular)
+    LaunchedEffect(isRegular, modulo) {
+        viewModel.loadVerbs(isRegular, modulo)
     }
 
     Scaffold(
