@@ -1,4 +1,4 @@
-package com.example.calcuverbs.ui.module1
+package com.example.calcuverbs.viewmodels
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

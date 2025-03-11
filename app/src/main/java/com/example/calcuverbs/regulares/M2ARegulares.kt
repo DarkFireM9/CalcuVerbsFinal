@@ -1,20 +1,21 @@
-package com.example.calcuverbs.irregulares
-
-
+package com.example.calcuverbs.regulares
 
 import androidx.compose.foundation.ExperimentalFoundationApi
-import androidx.compose.material3.CenterAlignedTopAppBar
-import androidx.compose.material3.Scaffold
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.navigation.NavController
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -26,8 +27,23 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.HelpOutline
-import androidx.compose.material3.*
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CenterAlignedTopAppBar
+import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.Text
+import androidx.compose.material3.TopAppBarDefaults
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -38,32 +54,37 @@ import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.navigation.NavController
+import com.example.calcuverbs.data.Auxiliary
 import com.example.calcuverbs.data.Rule
 import com.example.calcuverbs.data.Verb
-import com.example.calcuverbs.viewmodels.M1AViewModel
-import com.example.calcuverbs.ui.theme.IrregularesPrimary
-import com.example.calcuverbs.ui.theme.IrregularesSecondary
-import com.example.calcuverbs.ui.theme.IrregularesTertiary
+import com.example.calcuverbs.ui.theme.RegularesPrimary
+import com.example.calcuverbs.ui.theme.RegularesSecondary
 import com.example.calcuverbs.ui.theme.RegularesTertiary
+
+import com.example.calcuverbs.viewmodels.M2AViewModel
+
 
 @OptIn(ExperimentalMaterial3Api::class, ExperimentalFoundationApi::class)
 @Composable
-fun M1AIrregularesScreen(
+fun M2AScreen(
     navController: NavController,
-    viewModel: M1AViewModel,
-    isRegular: Boolean, // Parámetro para determinar si se cargan verbos regulares o irregulares
-    modulo: String // Nuevo parámetro para filtrar por módulo
+    viewModel: M2AViewModel,
+    tense: String
 ) {
-    // Observa la lista de verbos desde el ViewModel
-    val verbs by viewModel.verbs.observeAsState(emptyList())
-    val verbBaseForms = verbs.map { it.baseForm }
+    val verbsGrouped by viewModel.getVerbsGroupedByLetter(tense, "2A").observeAsState(emptyMap())
 
+    val verbs by viewModel.verbs.observeAsState(emptyList())
     val pronouns by viewModel.pronouns.observeAsState(emptyList())
-    val modals by viewModel.modals.observeAsState(emptyList())
+    val auxiliaries by viewModel.auxiliaries.observeAsState(emptyList())
     val rules by viewModel.rules.observeAsState(emptyList())
 
+
+    var selectedAuxiliary by remember { mutableStateOf<String?>(null) }
+
+
     var selectedPronoun by remember { mutableStateOf<String?>(null) }
-    var selectedModal by remember { mutableStateOf<String?>(null) }
+
     var selectedVerb by remember { mutableStateOf<String?>(null) }
     var showVerbList by remember { mutableStateOf(false) }
 
@@ -76,12 +97,16 @@ fun M1AIrregularesScreen(
     var generatedTexts by remember { mutableStateOf<List<String>>(emptyList()) }
 
 
-    val verbsGrouped by viewModel.getVerbsGroupedByLetter(isRegular).observeAsState(initial = emptyMap())
+    val selectedTense by remember { mutableStateOf(tense ?: "Simple Present") }
 
 
-    // Cargar los verbos según la regularidad al iniciar la pantalla
-    LaunchedEffect(isRegular, modulo) {
-        viewModel.loadVerbs(isRegular, modulo)
+    // Llamamos al ViewModel cuando cambia el tense
+    LaunchedEffect(tense) {
+        viewModel.loadVerbsByTense(tense)
+
+        selectedAuxiliary?.let { aux ->
+            viewModel.updateAuxiliary(aux, tense)
+        }
     }
 
     Scaffold(
@@ -89,10 +114,10 @@ fun M1AIrregularesScreen(
             CenterAlignedTopAppBar(
                 title = {
                     Text(
-                        text = "Módulo 1",
+                        text = "Módulo 2.A",
                         fontSize = 20.sp,
                         fontWeight = FontWeight.Bold,
-                        color = IrregularesTertiary
+                        color = RegularesTertiary
                     )
                 },
                 navigationIcon = {
@@ -110,15 +135,15 @@ fun M1AIrregularesScreen(
                         color = RegularesTertiary,
                         modifier = Modifier
                             .clickable {
-                                navController.navigate("NoteIrregular/1")
+                                navController.navigate("NoteRegular/2")
                             }
                             .padding(horizontal = 16.dp) // Margen opcional
                     )
                 },
                 colors = TopAppBarDefaults.centerAlignedTopAppBarColors(
-                    containerColor = IrregularesSecondary,
-                    titleContentColor = IrregularesTertiary,
-                    navigationIconContentColor = IrregularesTertiary
+                    containerColor = RegularesSecondary,
+                    titleContentColor = RegularesTertiary,
+                    navigationIconContentColor = RegularesTertiary
                 )
             )
         },
@@ -127,24 +152,27 @@ fun M1AIrregularesScreen(
                 modifier = Modifier
                     .fillMaxSize()
                     .padding(innerPadding)
-                    .background(IrregularesPrimary)
+                    .background(RegularesPrimary)
                     .verticalScroll(rememberScrollState())
             ) {
                 // Selector de Pronombres
-                IrregularesHorizontalScrollSelector(
+                M2AHorizontalScrollSelector(
                     items = pronouns.map { it.pronoun },
                     selectedItem = selectedPronoun,
                     onItemSelected = { selectedPronoun = it },
                     modifier = Modifier.padding(vertical = 16.dp)
                 )
 
-                // Selector de Modales
-                IrregularesHorizontalScrollSelector(
-                    items = modals.map { it.modal },
-                    selectedItem = selectedModal,
-                    onItemSelected = { selectedModal = it },
-                    modifier = Modifier.padding(vertical = 16.dp)
+                // Selector de Auxiliares
+                M2AHorizontalScrollSelector(
+                    items = auxiliaries.map { it.baseForm }, // Mostrar auxiliares base
+                    selectedItem = selectedAuxiliary,
+                    onItemSelected = { aux ->
+                        selectedAuxiliary = aux  // Asegurar que el estado local se actualice
+                        viewModel.updateAuxiliary(aux, tense) // Se actualiza el auxiliar según el tense
+                    }
                 )
+
 
                 Spacer(modifier = Modifier.height(16.dp))
 
@@ -162,7 +190,7 @@ fun M1AIrregularesScreen(
                 ) {
                     Text(
                         text = selectedVerb ?: "Choose your verb",
-                        color = IrregularesPrimary,
+                        color = RegularesPrimary,
                         fontSize = 18.sp,
                         textAlign = TextAlign.Center,
                         fontWeight = FontWeight.Medium
@@ -172,7 +200,7 @@ fun M1AIrregularesScreen(
                 Spacer(modifier = Modifier.height(16.dp))
 
                 // Mostrar botones y generar textos solo si los tres elementos están seleccionados
-                if (selectedPronoun != null && selectedModal != null && selectedVerb != null) {
+                if (selectedPronoun != null && selectedAuxiliary != null && selectedVerb != null) {
                     Column(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -180,7 +208,6 @@ fun M1AIrregularesScreen(
                         verticalArrangement = Arrangement.spacedBy(16.dp)
                     ) {
 
-                        //Botones primera linea
                         // Botones primera línea
                         Row(
                             modifier = Modifier
@@ -191,48 +218,50 @@ fun M1AIrregularesScreen(
                             // Botón afirmativo (✓)
                             Button(
                                 onClick = {
-                                    affirmativeText = IrregularesgenerateText(
-                                        type = "affirmative",
+                                    affirmativeText = M2AgenerateText(
+                                        type = "M2Aaffirmative",
                                         rules = rules,
                                         pronoun = selectedPronoun!!,
-                                        modal = selectedModal!!,
-                                        verb = selectedVerb!!
+                                        tense = selectedTense!!,  // Se pasa el tense seleccionado
+                                        verb = selectedVerb!!,
+                                        selectedAuxiliary = selectedAuxiliary!!
                                     )
                                 },
                                 modifier = Modifier.size(60.dp),
                                 colors = ButtonDefaults.buttonColors(
                                     containerColor = Color.White, // Fondo blanco
-                                    contentColor = IrregularesPrimary
+                                    contentColor = RegularesPrimary
                                 )
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Check,
                                     contentDescription = "Affirmative",
-                                    tint = IrregularesPrimary
+                                    tint = RegularesPrimary
                                 )
                             }
 
                             // Botón negativo (✕)
                             Button(
                                 onClick = {
-                                    negativeText = IrregularesgenerateText(
-                                        type = "negative",
+                                    affirmativeText = M2AgenerateText(
+                                        type = "M2Anegative",
                                         rules = rules,
                                         pronoun = selectedPronoun!!,
-                                        modal = selectedModal!!,
-                                        verb = selectedVerb!!
+                                        tense = selectedTense!!,  // Se pasa el tense seleccionado
+                                        verb = selectedVerb!!,
+                                        selectedAuxiliary = selectedAuxiliary!!
                                     )
                                 },
                                 modifier = Modifier.size(60.dp),
                                 colors = ButtonDefaults.buttonColors(
                                     containerColor = Color.White, // Fondo blanco
-                                    contentColor = IrregularesPrimary
+                                    contentColor = RegularesPrimary
                                 )
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Close,
                                     contentDescription = "Negative",
-                                    tint = IrregularesPrimary
+                                    tint = RegularesPrimary
                                 )
                             }
                         }
@@ -263,72 +292,75 @@ fun M1AIrregularesScreen(
                             // Botón de pregunta (?)
                             Button(
                                 onClick = {
-                                    questionText = IrregularesgenerateText(
-                                        type = "question",
+                                    affirmativeText = M2AgenerateText(
+                                        type = "M2Aquestion",
                                         rules = rules,
                                         pronoun = selectedPronoun!!,
-                                        modal = selectedModal!!,
-                                        verb = selectedVerb!!
+                                        tense = selectedTense!!,  // Se pasa el tense seleccionado
+                                        verb = selectedVerb!!,
+                                        selectedAuxiliary = selectedAuxiliary!!
                                     )
                                 },
                                 modifier = Modifier.size(60.dp),
                                 colors = ButtonDefaults.buttonColors(
                                     containerColor = Color.White, // Fondo blanco
-                                    contentColor = IrregularesPrimary
+                                    contentColor = RegularesPrimary
                                 )
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.HelpOutline,
                                     contentDescription = "Question",
-                                    tint = IrregularesPrimary
+                                    tint = RegularesPrimary
                                 )
                             }
 
                             // Botón respuesta positiva (✓)
                             Button(
                                 onClick = {
-                                    positiveResponseText = IrregularesgenerateText(
-                                        type = "positiveResponse",
+                                    affirmativeText = M2AgenerateText(
+                                        type = "M2ApositiveResponse",
                                         rules = rules,
                                         pronoun = selectedPronoun!!,
-                                        modal = selectedModal!!,
-                                        verb = selectedVerb!!
+                                        tense = selectedTense!!,  // Se pasa el tense seleccionado
+                                        verb = selectedVerb!!,
+                                        selectedAuxiliary = selectedAuxiliary!!
                                     )
                                 },
                                 modifier = Modifier.size(60.dp),
                                 colors = ButtonDefaults.buttonColors(
                                     containerColor = Color.White, // Fondo blanco
-                                    contentColor = IrregularesPrimary
+                                    contentColor = RegularesPrimary
                                 )
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Check,
                                     contentDescription = "Positive Response",
-                                    tint = IrregularesPrimary
+                                    tint = RegularesPrimary
                                 )
                             }
 
                             // Botón respuesta negativa (✕)
                             Button(
                                 onClick = {
-                                    negativeResponseText = IrregularesgenerateText(
-                                        type = "negativeResponse",
+                                    affirmativeText = M2AgenerateText(
+                                        type = "M2AnegativeResponse",
                                         rules = rules,
                                         pronoun = selectedPronoun!!,
-                                        modal = selectedModal!!,
-                                        verb = selectedVerb!!
+                                        tense = selectedTense!!,  // Se pasa el tense seleccionado
+                                        verb = selectedVerb!!,
+                                        selectedAuxiliary = selectedAuxiliary!!
                                     )
                                 },
                                 modifier = Modifier.size(60.dp),
                                 colors = ButtonDefaults.buttonColors(
                                     containerColor = Color.White, // Fondo blanco
-                                    contentColor = IrregularesPrimary
+                                    contentColor = RegularesPrimary
                                 )
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Close,
                                     contentDescription = "Negative Response",
-                                    tint = IrregularesPrimary,
+                                    tint = RegularesPrimary,
                                     modifier = Modifier.size(50.dp) // Tamaño del ícono
                                 )
                             }
@@ -365,7 +397,7 @@ fun M1AIrregularesScreen(
                 Button(
                     onClick = {
                         selectedPronoun = null
-                        selectedModal = null
+                        selectedAuxiliary = null
                         selectedVerb = null
                         affirmativeText = ""
                         negativeText = ""
@@ -379,7 +411,7 @@ fun M1AIrregularesScreen(
                         .padding(vertical = 8.dp),
                     colors = ButtonDefaults.buttonColors(
                         containerColor = Color.White,
-                        contentColor = IrregularesPrimary
+                        contentColor = RegularesPrimary
                     ),
                     elevation = ButtonDefaults.buttonElevation(4.dp)
                 ) {
@@ -393,7 +425,7 @@ fun M1AIrregularesScreen(
 
                 // Lista de verbos en pantalla completa
                 if (showVerbList) {
-                    IrregularesVerbListScreen(
+                    M2AVerbListScreen(
                         verbsGrouped = verbsGrouped,
                         onVerbSelected = {
                             selectedVerb = it
@@ -406,21 +438,29 @@ fun M1AIrregularesScreen(
         })
 }
 
-
-
-fun IrregularesgenerateText(type: String, rules: List<Rule>, pronoun: String, modal: String, verb: String): String {
+fun M2AgenerateText(
+    type: String,
+    rules: List<Rule>,
+    pronoun: String,
+    tense: String,
+    verb: String,
+    selectedAuxiliary: String // Ahora pasamos el auxiliar seleccionado
+): String {
     val rule = rules.find { it.type == type }
+
     return rule?.structure
         ?.replace("\$pronoun", pronoun)
-        ?.replace("\$modal", modal)
+        ?.replace("\$auxiliary", selectedAuxiliary)  // Usamos el auxiliar seleccionado
         ?.replace("\$verb", verb)
         ?: "Rule not found"
 }
 
+
+
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun IrregularesVerbListScreen(
-    verbsGrouped: Map<Char, List<Verb>>,
+fun M2AVerbListScreen(
+    verbsGrouped: Map<Char, List<String>>, // Cambia List<Verb> a List<String>
     onVerbSelected: (String) -> Unit,
     onDismiss: () -> Unit
 ) {
@@ -439,29 +479,29 @@ fun IrregularesVerbListScreen(
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .background(IrregularesSecondary)
+                                .background(RegularesSecondary)
                                 .padding(8.dp)
                         ) {
                             Text(
                                 text = letter.toString(),
                                 fontSize = 24.sp,
                                 fontWeight = FontWeight.Bold,
-                                color = IrregularesTertiary
+                                color = RegularesTertiary
                             )
                         }
                     }
 
-                    // Lista de verbos bajo la letra
+                    // Lista de verbos bajo la letra (ya conjugados)
                     items(verbs) { verb ->
                         Box(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .background(Color.White)
-                                .clickable { onVerbSelected(verb.baseForm) }
+                                .clickable { onVerbSelected(verb) } // Ahora pasa la conjugación
                                 .padding(16.dp)
                         ) {
                             Text(
-                                text = verb.baseForm,
+                                text = verb,
                                 fontSize = 18.sp,
                                 fontWeight = FontWeight.Medium,
                                 color = Color.Black
@@ -474,20 +514,17 @@ fun IrregularesVerbListScreen(
     }
 }
 
-
-
-
 @Composable
-fun IrregularesHorizontalScrollSelector(
+fun M2AHorizontalScrollSelector(
     items: List<String>,
     selectedItem: String?,
     onItemSelected: (String) -> Unit,
     modifier: Modifier = Modifier,
     itemWidth: Dp = 120.dp, // Ancho predeterminado
     itemHeight: Dp = 60.dp, // Altura predeterminada
-    selectedColor: Color = IrregularesSecondary, // Color de fondo para el elemento seleccionado
+    selectedColor: Color = RegularesSecondary, // Color de fondo para el elemento seleccionado
     unselectedColor: Color = Color.Transparent, // Color de fondo para los elementos no seleccionados
-    selectedTextColor: Color = IrregularesTertiary, // Color del texto del elemento seleccionado
+    selectedTextColor: Color = RegularesTertiary, // Color del texto del elemento seleccionado
     unselectedTextColor: Color = Color.White, // Color del texto de los elementos no seleccionados
     textSize: TextUnit = 20.sp // Tamaño de fuente
 ) {
@@ -523,3 +560,4 @@ fun IrregularesHorizontalScrollSelector(
         }
     }
 }
+

@@ -42,8 +42,12 @@ data class Tense(
 data class Auxiliary(
     @PrimaryKey(autoGenerate = true)
     val id: Int = 0,
-    val auxiliary: String // Ejemplo: "do", "does", "did", "have", "has", "had"
+    val baseForm: String,       // Forma base (Do / Have)
+    val pastSimple: String,     // Pasado simple (Did / Had)
+    val presentPerfect: String, // Presente perfecto (Have / Has)
+    val pastPerfect: String     // Pasado perfecto (Had)
 )
+
 
 
 @Entity
@@ -100,6 +104,21 @@ interface VerbDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertVerbs(verbs: List<Verb>)
 
+    @Query("""
+    SELECT 
+        CASE 
+            WHEN :tense = 'Simple Present' THEN baseForm
+            WHEN :tense = 'Simple Past' THEN pastSimple
+            WHEN :tense = 'Past Participle' THEN pastParticiple
+            WHEN :tense = 'Present Perfect' THEN presentPerfect
+            WHEN :tense = 'Past Perfect' THEN pastPerfect
+            ELSE baseForm
+        END AS verbForm
+    FROM verbs 
+    WHERE modulo = :modulo
+""")
+    suspend fun getVerbsByModuloAndTense(modulo: String, tense: String): List<String>
+
 
 
 }
@@ -132,6 +151,7 @@ interface RuleDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertRules(rules: List<Rule>)
+
 }
 
 @Dao
@@ -148,6 +168,9 @@ interface AuxiliaryDao {
     @Query("SELECT * FROM auxiliaries")
     suspend fun getAllAuxiliaries(): List<Auxiliary>
 
+    @Query("SELECT * FROM auxiliaries WHERE baseForm = :baseForm LIMIT 1")
+    suspend fun getAuxiliaryByBaseForm(baseForm: String): Auxiliary?
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertAuxiliaries(auxiliaries: List<Auxiliary>)
 }
@@ -155,7 +178,7 @@ interface AuxiliaryDao {
 
 
 
-@Database(entities = [Pronoun::class, Verb::class, Rule::class, Modal::class, Note::class, Tense::class, Auxiliary::class], version = 4, exportSchema = false)
+@Database(entities = [Pronoun::class, Verb::class, Rule::class, Modal::class, Note::class, Tense::class, Auxiliary::class], version = 5, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
     abstract fun verbDao(): VerbDao
     abstract fun modalDao(): ModalDao

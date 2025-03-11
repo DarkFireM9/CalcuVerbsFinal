@@ -76,7 +76,7 @@ fun ModuleGrid(navController: NavController, context: android.content.Context) {
         // Fila superior
         Row(horizontalArrangement = Arrangement.spacedBy(16.dp)) {
             ModuleButton("M1.A") {navController.navigate(Routes.M1ARegulares)}
-            ModuleButton("M2.A") {navController.navigate(Routes.RegularSoon)
+            ModuleButton("M2.A") {navController.navigate(Routes.M2ASwitch)
             }
         }
 //        // Segunda fila

@@ -15,13 +15,17 @@ import com.example.calcuverbs.irregulares.M1AIrregularesScreen
 import com.example.calcuverbs.irregulares.NotAvailableIrregularesScreen
 import com.example.calcuverbs.irregulares.NoteIrregularScreen
 import com.example.calcuverbs.regulares.M1ARegularesScreen
+import com.example.calcuverbs.regulares.M2AScreen
+import com.example.calcuverbs.regulares.M2ASwitchScreen
 import com.example.calcuverbs.regulares.NotAvailableRegularesScreen
 import com.example.calcuverbs.regulares.NoteRegularScreen
 import com.example.calcuverbs.regulares.RegularesAboutUsScreen
 import com.example.calcuverbs.regulares.RegularesMainScreen
 import com.example.calcuverbs.regulares.RegularesModulesScreen
-import com.example.calcuverbs.ui.module1.M1AViewModel
+import com.example.calcuverbs.viewmodels.M1AViewModel
 import com.example.calcuverbs.viewmodels.M1AViewModelFactory
+import com.example.calcuverbs.viewmodels.M2AViewModel
+import com.example.calcuverbs.viewmodels.M2AViewModelFactory
 import com.example.calcuverbs.viewmodels.NoteViewModel
 import com.example.calcuverbs.viewmodels.NoteViewModelFactory
 
@@ -90,6 +94,21 @@ fun AppNavigation(database: AppDatabase) {
 
             NoteIrregularScreen(navController = navController, viewModel = viewModel, noteIndex = noteIndex)
         }
+
+        composable(Routes.M2ASwitch) {
+            M2ASwitchScreen(navController)
+        }
+
+        composable("M2A/{tense}") { backStackEntry ->
+            val factory = M2AViewModelFactory(database)
+            val tense = backStackEntry.arguments?.getString("tense") ?: "Present Simple"
+            val viewModel: M2AViewModel = viewModel(factory = factory)
+
+            M2AScreen(navController, viewModel, tense)
+        }
+
+
+
 
         composable(Routes.RegularSoon) {
             NotAvailableRegularesScreen(navController)

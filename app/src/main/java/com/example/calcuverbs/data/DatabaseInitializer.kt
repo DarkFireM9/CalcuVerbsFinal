@@ -12,6 +12,7 @@ object DatabaseInitializer {
         val pronounDao = database.pronounDao()
         val ruleDao = database.ruleDao()
         val tenseDao = database.tenseDao()
+        val auxiliaryDao = database.auxiliaryDao()
 
 
 
@@ -303,7 +304,13 @@ object DatabaseInitializer {
                 Rule(type = "negative", structure = "\$pronoun \$modal not \$verb."),
                 Rule(type = "question", structure = "\$modal \$pronoun \$verb?"),
                 Rule(type = "positiveResponse", structure = "Yes, \$pronoun \$modal \$verb."),
-                Rule(type = "negativeResponse", structure = "No, \$pronoun \$modal not \$verb.")
+                Rule(type = "negativeResponse", structure = "No, \$pronoun \$modal not \$verb."),
+
+                Rule(type = "M2Aaffirmative", structure = "\$pronoun \$auxiliary \$verb."),
+                Rule(type = "M2Anegative", structure = "\$pronoun \$auxiliary not \$verb."),
+                Rule(type = "M2Aquestion", structure = "\$auxiliary \$pronoun \$verb?"),
+                Rule(type = "M2ApositiveResponse", structure = "Yes, \$pronoun \$auxiliary \$verb."),
+                Rule(type = "M2AnegativeResponse", structure = "No, \$pronoun \$auxiliary not \$verb.")
             )
 
 
@@ -314,13 +321,13 @@ object DatabaseInitializer {
                 Tense(id = 4, name = "Past Perfect")
             )
 
-            val initialAuxiliary = listOf(
-                Auxiliary(auxiliary = "Have"),
-                Auxiliary(auxiliary = "Does")
-
+            val initialAuxiliaries = listOf(
+                Auxiliary(baseForm = "Do", pastSimple = "Did", presentPerfect = "Have", pastPerfect = "Had"),
+                Auxiliary(baseForm = "Have", pastSimple = "Had", presentPerfect = "Have", pastPerfect = "Had")
             )
 
-            // Insertar en la base de datos
+            //Insertar
+            auxiliaryDao.insertAuxiliaries(initialAuxiliaries)
             verbDao.insertVerbs(initialVerbs)
             modalDao.insertModals(initialModals)
             pronounDao.insertPronouns(initialPronouns)

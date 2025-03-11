@@ -15,4 +15,6 @@ object Routes {
     var IrregularNotes = "NoteIrregularScreen"
     var IrregularSoon = "NotAvailableIrregularesScreen"
     var RegularSoon = "NotAvailableRegularesScreen"
+    var M2ARegulares = "M2AScreen"
+    var M2ASwitch = "M2ASwitchScreen"
 }

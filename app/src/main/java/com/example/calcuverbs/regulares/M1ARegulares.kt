@@ -22,11 +22,8 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.Help
 import androidx.compose.material.icons.filled.HelpOutline
-import androidx.compose.material.icons.filled.RemoveCircle
 import androidx.compose.material3.*
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Alignment
@@ -41,7 +38,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import com.example.calcuverbs.data.Rule
 import com.example.calcuverbs.data.Verb
-import com.example.calcuverbs.ui.module1.M1AViewModel
+import com.example.calcuverbs.viewmodels.M1AViewModel
 import com.example.calcuverbs.ui.theme.RegularesPrimary
 import com.example.calcuverbs.ui.theme.RegularesSecondary
 import com.example.calcuverbs.ui.theme.RegularesTertiary
